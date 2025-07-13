@@ -1,0 +1,10 @@
+# 가상 환경 폴더 무시
+.venv/
+.env
+
+# macOS 시스템 파일 무시
+.DS_Store
+
+# Windows 시스템 파일 무시
+Thumbs.db
+Desktop.ini

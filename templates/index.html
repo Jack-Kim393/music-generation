@@ -9,9 +9,18 @@
     <p>만들고 싶은 음악에 대한 설명을 입력하세요!</p>
     
     <form action="/" method="post">
-        <textarea name="prompt" rows="4" cols="50" placeholder="예: 80년대 레트로 스타일의 신나는 댄스곡"></textarea>
+        <textarea name="prompt" rows="4" cols="50" placeholder="예: 80년대 레트로 스타일의 신나는 댄스곡">{{ prompt or '' }}</textarea>
         <br>
         <input type="submit" value="음악 생성 시작하기">
     </form>
+
+    {% if music_url %}
+    <hr>
+    <h2>생성된 음악:</h2>
+    <audio controls>
+        <source src="{{ music_url }}" type="audio/wav">
+        Your browser does not support the audio element.
+    </audio>
+    {% endif %}
 </body>
 </html>

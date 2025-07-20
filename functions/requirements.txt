@@ -1,4 +1,5 @@
 firebase-functions
 firebase-admin
-gradio_client
-python-dotenv
+requests
+google-cloud-firestore
+replicate

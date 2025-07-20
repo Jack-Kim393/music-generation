@@ -1,11 +1,13 @@
-# functions/main.py (비동기 1단계 버전)
+# functions/main.py (dotenv 제거 최종 버전)
 import os, json, time, requests, traceback
 from firebase_functions import https_fn
 from firebase_functions.options import CorsOptions
 from firebase_admin import initialize_app, firestore
 
-load_dotenv()
+# load_dotenv() # ◀️ 이 라인을 삭제했습니다!
 initialize_app()
+
+# REPLICATE_API_TOKEN은 이제 클라우드 환경 변수에서 직접 읽어옵니다.
 REPLICATE_API_TOKEN = os.getenv("REPLICATE_API_TOKEN")
 
 # (query_musicgen_api 함수는 다음 단계에서 사용할 것이므로 일단 그대로 둡니다)

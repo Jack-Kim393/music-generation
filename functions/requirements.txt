@@ -1,11 +1,4 @@
-# Firebase 실행 환경을 위한 필수 라이브러리
 firebase-functions
 firebase-admin
-
-# AI 모델 및 외부 API 호출을 위한 라이브러리
-gradio_client        # MusicGen(작곡가) API 호출용
-google-generativeai  # Gemini(작사가) API 호출용
-requests             # 기타 HTTP 요청용 (필요시)
-
-# 로컬 개발 환경에서 .env 파일을 사용하기 위한 라이브러리
+gradio_client
 python-dotenv

@@ -1,38 +1,26 @@
-# .github/workflows/firebase-functions-deploy.yml (최종 수정본)
+# .github/workflows/firebase-deploy.yml (진짜 최종 통합 버전)
 
-name: Deploy Firebase Functions
+name: Deploy Firebase Project to Production
 
 on:
   push:
     branches:
       - main
-  workflow_dispatch:
-
-env:
-  PROJECT_ID: vibecoding-music-agent
 
 jobs:
-  deploy_functions:
+  build_and_deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
+      # 1. GitHub 저장소의 코드를 가져옵니다.
+      - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.12' # firebase.json에 명시된 버전과 일치
-
-      - name: Install dependencies
-        run: |
-          cd functions
-          python -m venv venv
-          ./venv/bin/pip install -r requirements.txt
-      
-      # --- 🔽🔽🔽 이 단계를 추가했습니다! 🔽🔽🔽 ---
+      # 2. Node.js 환경을 설정하고 Firebase CLI를 설치합니다.
+      #    (Functions 배포와 Hosting 배포 모두에 필요합니다.)
       - name: Install Firebase CLI
         run: npm install -g firebase-tools
-      # --- 🔼🔼🔼 여기까지 입니다 🔼🔼🔼 ---
-
-      - name: Deploy Firebase Functions
-        run: firebase deploy --only functions --project=${{ env.PROJECT_ID }} --token=${{ secrets.FIREBASE_SERVICE_ACCOUNT_VIBECODING_MUSIC_AGENT }} --non-interactive
+      
+      # 3. Firebase에 Functions와 Hosting을 모두 배포합니다.
+      - name: Deploy to Firebase
+        run: |
+          firebase deploy --project vibecoding-music-agent --token ${{ secrets.FIREBASE_SERVICE_ACCOUNT_VIBECODING_MUSIC_AGENT }} --non-interactive

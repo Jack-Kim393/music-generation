@@ -25,9 +25,9 @@ jobs:
 
       - name: Install dependencies
         run: |
+          cd functions
           python -m venv venv
-          source venv/bin/activate
-          pip install -r functions/requirements.txt
+          ./venv/bin/pip install -r requirements.txt
       
       # --- 🔽🔽🔽 이 단계를 추가했습니다! 🔽🔽🔽 ---
       - name: Install Firebase CLI

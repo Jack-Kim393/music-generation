@@ -1,4 +1,4 @@
-# functions/main.py (최종 구문 오류 수정 버전)
+# functions/main.py (최종 오타 수정 버전)
 
 from firebase_functions import https_fn, options
 from firebase_admin import initialize_app, firestore
@@ -53,9 +53,33 @@ def generate_music(req: https_fn.Request) -> https_fn.Response:
     cors=options.CorsOptions(cors_origins="*", cors_methods=["get", "post"])
 )
 def webhook(req: https_fn.Request) -> https_fn.Response:
-    # ✅ 아래 라인의 누락된 부분을 제가 다시 채워넣었습니다!
+    # ✅ 이 함수는 Replicate 라이브러리를 사용하지 않습니다.
+    #    불필요한 오타가 있었을 수 있는 부분을 깨끗하게 정리했습니다.
     if req.method != "POST":
         return https_fn.Response("POST 요청만 허용됩니다.", status=405)
 
     result = req.get_json()
-    replicate_
+    replicate_id = result.get("id")
+    status = result.get("status")
+    
+    if not replicate_id or not status:
+        return https_fn.Response("누락된 데이터가 있습니다.", status=400)
+
+    db = firestore.client()
+    query = db.collection("music_requests").where("replicate_id", "==", replicate_id).limit(1)
+    docs = query.stream()
+    doc_to_update = next(docs, None)
+    
+    if doc_to_update:
+        update_data = {
+            "status": "failed" if status != "succeeded" else "completed",
+            "completed_time": firestore.SERVER_TIMESTAMP
+        }
+        if status == "succeeded":
+            update_data["output_url"] = result.get("output", {}).get("audio")
+        else:
+            update_data["error"] = result.get("error", "Replicate에서 오류 발생")
+        
+        doc_to_update.reference.update(update_data)
+
+    return https_fn.Response("웹훅 수신 완료", status=200)

@@ -1,4 +1,4 @@
-# functions/main.py (런타임 에러 수정 최종 버전)
+# functions/main.py (진짜 최종 수정본)
 
 from firebase_functions import https_fn, options
 from firebase_admin import initialize_app, firestore
@@ -6,9 +6,6 @@ import replicate
 import os
 
 initialize_app()
-
-# ‼️ 이 라인을 삭제했습니다! ‼️
-# os.environ["REPLICATE_API_TOKEN"] = os.getenv("REPLICATE_API_TOKEN")
 
 # -----------------------------------------------------------------
 # 함수 1: 주문 접수 및 Replicate 작업 요청 (웨이터)
@@ -18,7 +15,6 @@ initialize_app()
     secrets=["REPLICATE_API_TOKEN"]
 )
 def generate_music(req: https_fn.Request) -> https_fn.Response:
-    # (이하 내용은 이전과 동일합니다)
     if req.method != "POST" or not req.is_json:
         return https_fn.Response("잘못된 요청입니다.", status=400)
     
@@ -34,57 +30,10 @@ def generate_music(req: https_fn.Request) -> https_fn.Response:
         "create_time": firestore.SERVER_TIMESTAMP
     })
 
-    # ‼️‼️ 중요: 이 URL은 파트너님이 직접 배포 후 얻은 실제 webhook 주소여야 합니다!
     webhook_url = "https://webhook-yf6l5gdmia-uc.a.run.app" 
 
     try:
-        # replicate 라이브러리는 자동으로 REPLICATE_API_TOKEN 환경변수를 찾아 사용합니다.
         prediction = replicate.predictions.create(
             version="riffusion/riffusion:8cf61ea6c56afd61d8f5b9ffd14d7c216c0a93844ce2d82ac1c9ecc9c7f24e05",
             input={"prompt_a": prompt},
             webhook=webhook_url,
-            webhook_events_filter=["completed", "failed"]
-        )
-    except Exception as e:
-        doc_ref.update({"status": "failed", "error": str(e)})
-        return https_fn.Response(f"Replicate API 호출 오류: {str(e)}", status=500)
-
-    doc_ref.update({"replicate_id": prediction.id})
-    return https_fn.Response({"document_id": doc_ref.id}, mimetype="application/json")
-
-# -----------------------------------------------------------------
-# 함수 2: Replicate로부터 결과 수신 (주방장)
-# -----------------------------------------------------------------
-@https_fn.on_request(
-    cors=options.CorsOptions(cors_origins="*", cors_methods=["get", "post"])
-)
-def webhook(req: https_fn.Request) -> https_fn.Response:
-    # (이하 내용은 이전과 동일합니다)
-    if req.method != "POST":
-        return https_fn.Response("POST 요청만 허용됩니다.", status=405)
-
-    result = req.get_json()
-    replicate_id = result.get("id")
-    status = result.get("status")
-    
-    if not replicate_id or not status:
-        return https_fn.Response("누락된 데이터가 있습니다.", status=400)
-
-    db = firestore.client()
-    query = db.collection("music_requests").where("replicate_id", "==", replicate_id).limit(1)
-    docs = query.stream()
-    doc_to_update = next(docs, None)
-    
-    if doc_to_update:
-        update_data = {
-            "status": "failed" if status != "succeeded" else "completed",
-            "completed_time": firestore.SERVER_TIMESTAMP
-        }
-        if status == "succeeded":
-            update_data["output_url"] = result.get("output", {}).get("audio")
-        else:
-            update_data["error"] = result.get("error", "Replicate에서 오류 발생")
-        
-        doc_to_update.reference.update(update_data)
-
-    return https_fn.Response("웹훅 수신 완료", status=200)

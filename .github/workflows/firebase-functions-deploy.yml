@@ -1,4 +1,4 @@
-# .github/workflows/firebase-deploy.yml (현재 버전, 완벽한 상태)
+# .github/workflows/firebase-deploy.yml
 
 name: Deploy Firebase Project to Production
 

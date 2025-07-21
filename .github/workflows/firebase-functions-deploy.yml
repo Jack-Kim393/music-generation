@@ -33,4 +33,4 @@ jobs:
       # ✅ 이 부분은 문제가 없습니다. 서비스 계정 키를 이용한 배포 방식입니다.
       - name: Deploy to Firebase
         run: firebase deploy --project vibecoding-music-agent --token ${{ secrets.FIREBASE_SERVICE_ACCOUNT_VIBECODING_MUSIC_AGENT }} --non-interactive
-      # ✅ env: 블록이 없으므로 REPLICATE_API_TOKEN 충돌이 발생하지 않습니다. 완벽해요!
+      # ✅ env: 블록이 없으므로 REPLICATE_API_TOKEN 충돌이 발생하지 않습니다.

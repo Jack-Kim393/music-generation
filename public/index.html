@@ -11,19 +11,21 @@
         <h1>AI Music Generator 🎵</h1>
         <p>생성하고 싶은 음악의 분위기나 장르를 영어로 입력해보세요!</p>
         
-        <form id="music-form">
-            <input type="text" id="prompt-input" name="prompt" placeholder="예: 80s pop track with bassy drums and synth" required>
+        <form id="musicForm">
+            <input type="text" id="prompt" name="prompt" placeholder="예: 80s pop track with bassy drums and synth" required>
             <button type="submit">음악 생성</button>
         </form>
         
-        <div id="loading" style="display: none;">
-            <p>음악을 생성 중입니다... (최대 1분 정도 소요될 수 있습니다)</p>
-            <div class="spinner"></div>
+        <div id="spinner" style="display: none;">
+            <div class="spinner-icon"></div> 
         </div>
 
-        <div id="result-container"></div>
+        <div id="result"></div>
     </div>
 
+    <script src="/__/firebase/8.10.1/firebase-app.js"></script>
+    <script src="/__/firebase/8.10.1/firebase-firestore.js"></script>
+    <script src="/__/firebase/init.js"></script>
     <script src="script.js"></script>
 </body>
 </html>

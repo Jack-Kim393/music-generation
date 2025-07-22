@@ -1,9 +1,10 @@
-# functions/main.py (최종 오타 수정 버전)
+# functions/main.py (JSON 응답 보강 최종 버전)
 
 from firebase_functions import https_fn, options
 from firebase_admin import initialize_app, firestore
 import replicate
 import os
+import json # ✅ JSON 라이브러리를 가져옵니다.
 
 initialize_app()
 
@@ -44,7 +45,10 @@ def generate_music(req: https_fn.Request) -> https_fn.Response:
         return https_fn.Response(f"Replicate API 호출 오류: {str(e)}", status=500)
 
     doc_ref.update({"replicate_id": prediction.id})
-    return https_fn.Response({"document_id": doc_ref.id}, mimetype="application/json")
+    
+    # ✅ json.dumps를 사용해서 응답이 확실한 JSON 문자열임을 보장합니다.
+    response_data = json.dumps({"document_id": doc_ref.id})
+    return https_fn.Response(response_data, mimetype="application/json")
 
 # -----------------------------------------------------------------
 # 함수 2: Replicate로부터 결과 수신 (주방장)
@@ -53,8 +57,6 @@ def generate_music(req: https_fn.Request) -> https_fn.Response:
     cors=options.CorsOptions(cors_origins="*", cors_methods=["get", "post"])
 )
 def webhook(req: https_fn.Request) -> https_fn.Response:
-    # ✅ 이 함수는 Replicate 라이브러리를 사용하지 않습니다.
-    #    불필요한 오타가 있었을 수 있는 부분을 깨끗하게 정리했습니다.
     if req.method != "POST":
         return https_fn.Response("POST 요청만 허용됩니다.", status=405)
 

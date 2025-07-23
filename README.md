@@ -2,7 +2,7 @@
 
 텍스트 프롬프트를 입력하면 AI가 세상에 없던 새로운 음악을 생성해주는 웹 애플리케이션입니다.
 
-![AI Music Generator Screenshot](여기에_성공화면_스크린샷_이미지_주소를_넣어주세요)
+![AI Music Generator Screenshot](./assets/success.png)
 
 ---
 

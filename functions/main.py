@@ -38,7 +38,7 @@ def generate_music(req: https_fn.Request) -> https_fn.Response:
             version="riffusion/riffusion:8cf61ea6c56afd61d8f5b9ffd14d7c216c0a93844ce2d82ac1c9ecc9c7f24e05",
             input={
                 "prompt_a": prompt,
-                "duration": 15  # ✅ 15초 길이의 음악을 요청합니다! (원하는 숫자로 변경 가능)
+                "duration": 15  # ✅ 15초 길이의 음악을 요청합니다! (원하는 숫자로 변경 가능 / replicate에서 duration지원안함)
             },
             webhook=webhook_url,
             webhook_events_filter=["completed"]

@@ -8,3 +8,6 @@
 # Windows 시스템 파일 무시
 Thumbs.db
 Desktop.ini
+
+#keyfile 무시
+vibecoding-music-agent-bf965ae41717.json

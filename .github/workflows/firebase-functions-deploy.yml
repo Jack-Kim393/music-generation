@@ -30,7 +30,10 @@ jobs:
           python -m venv venv
           ./venv/bin/pip install -r requirements.txt
       
-      # ✅ 이 부분은 문제가 없습니다. 서비스 계정 키를 이용한 배포 방식입니다.
+      - name: Authenticate to Google Cloud
+        uses: 'google-github-actions/auth@v2'
+        with:
+          credentials_json: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_VIBECODING_MUSIC_AGENT }}'
+
       - name: Deploy to Firebase
-        run: firebase deploy --project vibecoding-music-agent --token ${{ secrets.FIREBASE_SERVICE_ACCOUNT_VIBECODING_MUSIC_AGENT }} --non-interactive
-      # ✅ env: 블록이 없으므로 REPLICATE_API_TOKEN 충돌이 발생하지 않습니다.
+        run: firebase deploy --project vibecoding-music-agent --non-interactive
